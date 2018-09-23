@@ -78,7 +78,7 @@ namespace cc.newspring.AttendedCheckIn.Workflow.Action.CheckIn
             // log a warning if the attribute is missing or invalid
             if ( string.IsNullOrWhiteSpace( personSpecialNeedsKey ) )
             {
-                action.AddLogEntry( string.Format( "The Person Special Needs attribute is not selected or invalid for '{0}'.", action.ActionType.Name ) );
+                action.AddLogEntry( string.Format( "The Person Special Needs attribute is not selected or invalid for '{0}'.", action.ActionTypeCache.Name ) );
             }
 
             var family = checkInState.CheckIn.Families.FirstOrDefault( f => f.Selected );
@@ -96,7 +96,7 @@ namespace cc.newspring.AttendedCheckIn.Workflow.Action.CheckIn
                     // order by most recent attendance
                     var lastDateAttendances = attendanceService.Queryable().Where( a =>
                             a.PersonAlias.PersonId == previousAttender.Person.Id &&
-                            availableGroupTypeIds.Contains( a.Group.GroupTypeId ) &&
+                            availableGroupTypeIds.Contains( a.Occurrence.Group.GroupTypeId ) &&
                             a.StartDateTime >= cutoffDate && a.DidAttend == true )
                         .OrderByDescending( a => a.StartDateTime ).Take( maxAssignments )
                         .ToList();
